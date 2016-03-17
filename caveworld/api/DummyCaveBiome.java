@@ -1,16 +1,16 @@
 package caveworld.api;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class DummyCaveBiome implements ICaveBiome
+public final class DummyCaveBiome implements ICaveBiome
 {
 	private final BiomeGenBase biome;
 
 	public DummyCaveBiome()
 	{
-		this.biome = BiomeGenBase.plains;
+		this(BiomeGenBase.plains);
 	}
 
 	public DummyCaveBiome(BiomeGenBase biome)
@@ -25,47 +25,44 @@ public class DummyCaveBiome implements ICaveBiome
 	}
 
 	@Override
-	public int setGenWeight(int weight)
-	{
-		return getGenWeight();
-	}
-
-	@Override
-	public int getGenWeight()
+	public int getWeight()
 	{
 		return 0;
 	}
 
 	@Override
-	public BlockEntry setTerrainBlock(BlockEntry entry)
+	public int setWeight(int weight)
 	{
-		return getTerrainBlock();
+		return 0;
 	}
 
 	@Override
-	public BlockEntry getTerrainBlock()
+	public BlockMeta getBlockMeta()
 	{
-		return new BlockEntry(Blocks.stone, 0);
+		return new BlockMeta(Blocks.stone, 0);
 	}
 
 	@Override
-	public BlockEntry setTopBlock(BlockEntry entry)
+	public IBlockState getBlockState()
 	{
-		return getTopBlock();
+		return getBlockMeta().getBlockState();
 	}
 
 	@Override
-	public BlockEntry getTopBlock()
+	public void setBlockMeta(BlockMeta blockMeta) {}
+
+	@Override
+	public BlockMeta getTopBlockMeta()
 	{
-		return getTerrainBlock();
+		return getBlockMeta();
 	}
 
 	@Override
-	public void loadFromNBT(NBTTagCompound nbt) {}
+	public IBlockState getTopBlockState()
+	{
+		return getTopBlockMeta().getBlockState();
+	}
 
 	@Override
-	public NBTTagCompound saveToNBT()
-	{
-		return new NBTTagCompound();
-	}
+	public void setTopBlockMeta(BlockMeta blockMeta) {}
 }

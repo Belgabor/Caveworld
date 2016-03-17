@@ -1,12 +1,3 @@
-/*
- * Caveworld
- *
- * Copyright (c) 2016 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package caveworld.world;
 
 import java.io.File;
@@ -14,45 +5,27 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.security.SecureRandom;
 import java.util.Locale;
-import java.util.Random;
 
 import org.apache.logging.log4j.Level;
 
 import com.google.common.base.Strings;
 
-import caveworld.core.Config;
 import caveworld.util.CaveLog;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.DimensionManager;
 
 public class CaveSaveHandler
 {
-	protected Random random = new SecureRandom();
+	private String name;
 
-	protected String name;
-	protected int dimension;
-
-	protected NBTTagCompound data;
-	protected long worldSeed;
-	protected int subsurfaceHeight;
+	private NBTTagCompound data;
+	private long worldSeed;
+	private int subsurfaceHeight;
 
 	public CaveSaveHandler(String name)
 	{
 		this.name = name;
-	}
-
-	public CaveSaveHandler setDimension(int dim)
-	{
-		dimension = dim;
-
-		return this;
-	}
-
-	public String getSaveFolder()
-	{
-		return Config.cauldron ? "DIM" + dimension : "DIM-" + name;
 	}
 
 	public NBTTagCompound getData()
@@ -109,7 +82,7 @@ public class CaveSaveHandler
 			return root;
 		}
 
-		File dir = new File(root, getSaveFolder());
+		File dir = new File(root, "DIM-" + name);
 
 		if (!dir.exists())
 		{
@@ -169,21 +142,11 @@ public class CaveSaveHandler
 			{
 				CaveLog.log(Level.ERROR, e, "An error occurred trying to reading " + name + " dimension data");
 			}
+			finally
+			{
+				data = null;
+			}
 		}
-
-		data = null;
-	}
-
-	public void readFromBuffer(ByteBuf buffer)
-	{
-		worldSeed = buffer.readLong();
-		subsurfaceHeight = buffer.readInt();
-	}
-
-	public void writeToBuffer(ByteBuf buffer)
-	{
-		buffer.writeLong(worldSeed);
-		buffer.writeInt(subsurfaceHeight);
 	}
 
 	public void loadFromNBT()
@@ -200,7 +163,7 @@ public class CaveSaveHandler
 
 		if (!nbt.hasKey("Seed"))
 		{
-			nbt.setLong("Seed", random.nextLong());
+			nbt.setLong("Seed", new SecureRandom().nextLong());
 		}
 
 		if (!nbt.hasKey("SubsurfaceHeight"))

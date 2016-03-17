@@ -1,21 +1,11 @@
-/*
- * Caveworld
- *
- * Copyright (c) 2014 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package caveworld.world.gen;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenRavine;
 
 public class MapGenRavineCaveworld extends MapGenRavine
@@ -24,17 +14,8 @@ public class MapGenRavineCaveworld extends MapGenRavine
 
 	private final float[] parabolicField = new float[1024];
 
-	protected boolean underCaves;
-
-	public void generate(IChunkProvider chunkProvider, World world, int chunkX, int chunkZ, Block[] blocks, boolean flag)
-	{
-		underCaves = flag;
-
-		super.func_151539_a(chunkProvider, world, chunkX, chunkZ, blocks);
-	}
-
 	@Override
-	protected void func_151540_a(long ravineSeed, int chunkX, int chunkZ, Block[] blocks, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
+	protected void func_180707_a(long ravineSeed, int chunkX, int chunkZ, ChunkPrimer data, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
 	{
 		random.setSeed(ravineSeed);
 
@@ -117,8 +98,6 @@ public class MapGenRavineCaveworld extends MapGenRavine
 						for (int z = zLow; z < zHigh; ++z)
 						{
 							double zScale = (chunkZ * 16 + z + 0.5D - blockZ) / roomWidth;
-							int index = (x * 16 + z) * 256 + yHigh;
-
 							if (xScale * xScale + zScale * zScale < 1.0D)
 							{
 								for (int y = yHigh - 1; y >= yLow; --y)
@@ -127,10 +106,8 @@ public class MapGenRavineCaveworld extends MapGenRavine
 
 									if ((xScale * xScale + zScale * zScale) * parabolicField[y] + yScale * yScale / 6.0D < 1.0D)
 									{
-										digBlock(blocks, index, x, y, z, chunkX, chunkZ, false);
+										digBlock(data, x, y, z, chunkX, chunkZ, false);
 									}
-
-									--index;
 								}
 							}
 						}
@@ -146,7 +123,7 @@ public class MapGenRavineCaveworld extends MapGenRavine
 	}
 
 	@Override
-	protected void func_151538_a(World world, int x, int z, int chunkX, int chunkZ, Block[] blocks)
+	protected void recursiveGenerate(World world, int x, int z, int chunkX, int chunkZ, ChunkPrimer data)
 	{
 		if (rand.nextInt(45) == 0)
 		{
@@ -163,34 +140,34 @@ public class MapGenRavineCaveworld extends MapGenRavine
 				blockY = world.provider.getAverageGroundLevel() + rand.nextInt(10);
 			}
 
-			func_151540_a(rand.nextLong(), chunkX, chunkZ, blocks, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 3.0D);
+			func_180707_a(rand.nextLong(), chunkX, chunkZ, data, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 3.0D);
 		}
 	}
 
 	@Override
-	protected void digBlock(Block[] blocks, int index, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
+	protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
 	{
-		if (underCaves)
+//		if (generateUnderCaves)
 		{
 			if (y < 16)
 			{
-				blocks[index] = Blocks.flowing_water;
+				data.setBlockState(x, y, z, Blocks.flowing_water.getDefaultState());
 			}
 			else
 			{
-				blocks[index] = null;
+				data.setBlockState(x, y, z, Blocks.air.getDefaultState());
 			}
 		}
-		else
-		{
-			if (y < 10)
-			{
-				blocks[index] = Blocks.flowing_lava;
-			}
-			else
-			{
-				blocks[index] = null;
-			}
-		}
+//		else
+//		{
+//			if (y < 10)
+//			{
+//				data.setBlockState(x, y, z, Blocks.flowing_lava.getDefaultState());
+//			}
+//			else
+//			{
+//				data.setBlockState(x, y, z, Blocks.air.getDefaultState());
+//			}
+//		}
 	}
 }

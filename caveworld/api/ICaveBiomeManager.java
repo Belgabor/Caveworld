@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
 
@@ -15,41 +14,21 @@ public interface ICaveBiomeManager
 
 	public int getType();
 
-	public boolean isReadOnly();
+	public boolean addBiome(ICaveBiome biome);
 
-	public ICaveBiomeManager setReadOnly(boolean flag);
+	public boolean removeBiome(BiomeGenBase biome);
 
-	/**
-	 * Adds a cave biome.
-	 * @return <tt>true</tt> if has been added successfully.
-	 */
-	public boolean addCaveBiome(ICaveBiome biome);
+	public int getBiomeCount();
 
-	/**
-	 * Removes a cave biome.
-	 * @param biome The removing biome
-	 * @return <tt>true</tt> if has been removed successfully.
-	 */
-	public boolean removeCaveBiome(BiomeGenBase biome);
+	public ICaveBiome getBiome(BiomeGenBase biome);
 
-	public int getActiveBiomeCount();
+	public ICaveBiome getRandomBiome(Random random);
 
-	public ICaveBiome getCaveBiome(BiomeGenBase biome);
+	public Map<BiomeGenBase, ICaveBiome> getCaveBiomes();
 
-	public ICaveBiome getRandomCaveBiome(Random random);
-
-	public Map<BiomeGenBase, ICaveBiome> getCaveBiomeMap();
-
-	public Set<ICaveBiome> getCaveBiomes();
+	public Set<ICaveBiome> getBiomes();
 
 	public List<BiomeGenBase> getBiomeList();
 
-	/**
-	 * Removes all cave biomes.
-	 */
-	public void clearCaveBiomes();
-
-	public void loadFromNBT(NBTTagList list);
-
-	public NBTTagList saveToNBT();
+	public void clearBiomes();
 }

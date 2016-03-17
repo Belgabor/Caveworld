@@ -1,38 +1,20 @@
-/*
- * Caveworld
- *
- * Copyright (c) 2016 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package caveworld.world.gen;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenCaves;
 
 public class MapGenCavesCaveworld extends MapGenCaves
 {
 	protected final Random random = new Random();
 
-	protected boolean underCaves;
-
-	public void generate(IChunkProvider chunkProvider, World world, int chunkX, int chunkZ, Block[] blocks, boolean flag)
-	{
-		underCaves = flag;
-
-		super.func_151539_a(chunkProvider, world, chunkX, chunkZ, blocks);
-	}
-
 	@Override
-	protected void func_151541_a(long caveSeed, int chunkX, int chunkZ, Block[] blocks, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
+	protected void func_180702_a(long caveSeed, int chunkX, int chunkZ, ChunkPrimer data, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
 	{
 		random.setSeed(caveSeed);
 
@@ -86,8 +68,8 @@ public class MapGenCavesCaveworld extends MapGenCaves
 
 			if (!createFinalRoom && currentY == nextInterHeight && scale > 1.0F && targetY > 0)
 			{
-				func_151541_a(random.nextLong(), chunkX, chunkZ, blocks, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian - (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
-				func_151541_a(random.nextLong(), chunkX, chunkZ, blocks, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian + (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
+				func_180702_a(random.nextLong(), chunkX, chunkZ, data, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian - (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
+				func_180702_a(random.nextLong(), chunkX, chunkZ, data, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian + (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
 
 				return;
 			}
@@ -120,8 +102,6 @@ public class MapGenCavesCaveworld extends MapGenCaves
 						for (int z = zLow; z < zHigh; ++z)
 						{
 							double zScale = (chunkZ * 16 + z + 0.5D - blockZ) / roomWidth;
-							int index = (x * 16 + z) * 256 + yHigh;
-
 							if (xScale * xScale + zScale * zScale < 1.0D)
 							{
 								for (int y = yHigh - 1; y >= yLow; --y)
@@ -130,10 +110,8 @@ public class MapGenCavesCaveworld extends MapGenCaves
 
 									if (yScale > -0.7D && xScale * xScale + yScale * yScale + zScale * zScale < 1.0D)
 									{
-										digBlock(blocks, index, x, y, z, chunkX, chunkZ, false);
+										digBlock(data, x, y, z, chunkX, chunkZ, false, data.getBlockState(x, y, z), data.getBlockState(x, y + 1, z));
 									}
-
-									--index;
 								}
 							}
 						}
@@ -149,7 +127,7 @@ public class MapGenCavesCaveworld extends MapGenCaves
 	}
 
 	@Override
-	protected void func_151538_a(World world, int x, int z, int chunkX, int chunkZ, Block[] blocks)
+	protected void recursiveGenerate(World world, int x, int z, int chunkX, int chunkZ, ChunkPrimer data)
 	{
 		int worldHeight = world.provider.getActualHeight();
 		int chance = rand.nextInt(rand.nextInt(rand.nextInt(25) + 1) + 1);
@@ -168,7 +146,7 @@ public class MapGenCavesCaveworld extends MapGenCaves
 
 			if (rand.nextInt(4) == 0)
 			{
-				func_151542_a(rand.nextLong(), chunkX, chunkZ, blocks, blockX, blockY, blockZ);
+				func_180703_a(rand.nextLong(), chunkX, chunkZ, data, blockX, blockY, blockZ);
 
 				count += rand.nextInt(4);
 			}
@@ -184,35 +162,35 @@ public class MapGenCavesCaveworld extends MapGenCaves
 					scale *= rand.nextFloat() * rand.nextFloat() * 3.5F + 1.0F;
 				}
 
-				func_151541_a(rand.nextLong(), chunkX, chunkZ, blocks, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 1.15D);
+				func_180702_a(rand.nextLong(), chunkX, chunkZ, data, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 1.15D);
 			}
 		}
 	}
 
 	@Override
-	protected void digBlock(Block[] blocks, int index, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
+	protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop, IBlockState state, IBlockState up)
 	{
-		if (underCaves)
+//		if (generateUnderCaves)
 		{
 			if (y < 16)
 			{
-				blocks[index] = Blocks.water;
+				data.setBlockState(x, y, z, Blocks.water.getDefaultState());
 			}
 			else
 			{
-				blocks[index] = null;
+				data.setBlockState(x, y, z, Blocks.air.getDefaultState());
 			}
 		}
-		else
-		{
-			if (y < 10)
-			{
-				blocks[index] = Blocks.lava;
-			}
-			else
-			{
-				blocks[index] = null;
-			}
-		}
+//		else
+//		{
+//			if (y < 10)
+//			{
+//				data.setBlockState(x, y, z, Blocks.lava.getDefaultState());
+//			}
+//			else
+//			{
+//				data.setBlockState(x, y, z, Blocks.air.getDefaultState());
+//			}
+//		}
 	}
 }

@@ -1,62 +1,28 @@
-/*
- * Caveworld
- *
- * Copyright (c) 2016 kegare
- * https://github.com/kegare
- *
- * This mod is distributed under the terms of the Minecraft Mod Public License Japanese Translation, or MMPL_J.
- */
-
 package caveworld.world;
 
 import caveworld.api.CaveworldAPI;
 import caveworld.api.ICaveBiomeManager;
-import caveworld.client.renderer.EmptyRenderer;
-import caveworld.core.Config;
-import caveworld.network.CaveNetworkRegistry;
-import caveworld.network.client.CaveAdjustMessage;
-import caveworld.network.client.CaveMusicMessage;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.util.ChunkCoordinates;
+import caveworld.client.renderer.DummyRenderer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldProviderCaveworld extends WorldProviderSurface
 {
-	public static final String NAME = "Caveworld";
 	public static final int TYPE = 0;
-	public static final CaveSaveHandler saveHandler = new CaveSaveHandler(NAME);
+	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Caveworld");
 
 	protected int musicTime = 0;
 
 	public WorldProviderCaveworld()
 	{
-		this.dimensionId = CaveworldAPI.getDimension();
+		this.dimensionId = 3;
 		this.hasNoSky = true;
-
-		saveHandler.setDimension(dimensionId);
-	}
-
-	public float getBrightness()
-	{
-		return ChunkProviderCaveworld.caveBrightness;
-	}
-
-	@Override
-	protected void generateLightBrightnessTable()
-	{
-		float f = getBrightness();
-
-		for (int i = 0; i <= 15; ++i)
-		{
-			float f1 = 1.0F - i / 15.0F;
-
-			lightBrightnessTable[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * (1.0F - f) + f;
-		}
 	}
 
 	public ICaveBiomeManager getBiomeManager()
@@ -64,11 +30,11 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 		return CaveworldAPI.biomeManager;
 	}
 
-	@Override
-	protected void registerWorldChunkManager()
-	{
-		worldChunkMgr = new WorldChunkManagerCave(worldObj, 1, getBiomeManager());
-	}
+//	@Override
+//	protected void registerWorldChunkManager()
+//	{
+//		worldChunkMgr = new WorldChunkManagerCaveLegacy(worldObj, 1, getBiomeManager());
+//	}
 
 	@Override
 	public IChunkProvider createChunkGenerator()
@@ -93,7 +59,7 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 	@Override
 	public Vec3 getFogColor(float angle, float ticks)
 	{
-		return Vec3.createVectorHelper(0.01D, 0.01D, 0.01D);
+		return new Vec3(0.01D, 0.01D, 0.01D);
 	}
 
 	@Override
@@ -102,23 +68,16 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 		return 10;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean getWorldHasVoidParticles()
-	{
-		return false;
-	}
-
 	@Override
 	public String getDimensionName()
 	{
-		return NAME;
+		return "Caveworld";
 	}
 
 	@Override
 	public String getSaveFolder()
 	{
-		return Config.cauldron ? super.getSaveFolder() : "DIM-" + getDimensionName();
+		return "DIM-" + getDimensionName();
 	}
 
 	@Override
@@ -139,7 +98,7 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 	{
 		if (super.getSkyRenderer() == null)
 		{
-			setSkyRenderer(EmptyRenderer.instance);
+			setSkyRenderer(DummyRenderer.instance);
 		}
 
 		return super.getSkyRenderer();
@@ -151,7 +110,7 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 	{
 		if (super.getCloudRenderer() == null)
 		{
-			setCloudRenderer(EmptyRenderer.instance);
+			setCloudRenderer(DummyRenderer.instance);
 		}
 
 		return super.getCloudRenderer();
@@ -163,7 +122,7 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 	{
 		if (super.getWeatherRenderer() == null)
 		{
-			setWeatherRenderer(EmptyRenderer.instance);
+			setWeatherRenderer(DummyRenderer.instance);
 		}
 
 		return super.getWeatherRenderer();
@@ -176,13 +135,13 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 	}
 
 	@Override
-	public ChunkCoordinates getSpawnPoint()
+	public BlockPos getSpawnPoint()
 	{
-		return new ChunkCoordinates(0, 50, 0);
+		return new BlockPos(0, 50, 0);
 	}
 
 	@Override
-	public ChunkCoordinates getRandomizedSpawnPoint()
+	public BlockPos getRandomizedSpawnPoint()
 	{
 		return getSpawnPoint();
 	}
@@ -216,7 +175,7 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 			{
 				musicTime = worldObj.rand.nextInt(5000) + 10000;
 
-				CaveNetworkRegistry.sendToDimension(new CaveMusicMessage(worldObj.rand.nextInt(3) == 0 ? "cavemusic.cave" : "cavemusic.unrest"), dimensionId);
+//				CaveNetworkRegistry.sendToDimension(new CaveMusicMessage(worldObj.rand.nextInt(3) == 0 ? "cavemusic.cave" : "cavemusic.unrest"), dimensionId);
 			}
 		}
 
@@ -226,30 +185,28 @@ public class WorldProviderCaveworld extends WorldProviderSurface
 		worldObj.thunderingStrength = 0.0F;
 	}
 
-	public void adjustData()
-	{
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-
-			CaveNetworkRegistry.sendToAll(new CaveAdjustMessage(TYPE, saveHandler));
-		}
-	}
-
 	@Override
 	public long getSeed()
 	{
-		adjustData();
-
-		return saveHandler.getWorldSeed();
+		return 0;
+//		if (!worldObj.isRemote && saveHandler.getRawData() == null)
+//		{
+//			CaveNetworkRegistry.sendToAll(new CaveAdjustMessage(TYPE, dimensionId, saveHandler));
+//		}
+//
+//		return saveHandler.getWorldSeed();
 	}
 
 	@Override
 	public int getActualHeight()
 	{
-		adjustData();
-
-		return saveHandler.getSubsurfaceHeight() + 1;
+		return 256;
+//		if (!worldObj.isRemote && saveHandler.getRawData() == null)
+//		{
+//			CaveNetworkRegistry.sendToAll(new CaveAdjustMessage(TYPE, dimensionId, saveHandler));
+//		}
+//
+//		return saveHandler.getSubsurfaceHeight() + 1;
 	}
 
 	@Override

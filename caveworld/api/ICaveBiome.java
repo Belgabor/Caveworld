@@ -1,25 +1,25 @@
 package caveworld.api;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public interface ICaveBiome
 {
 	public BiomeGenBase getBiome();
 
-	public int setGenWeight(int weight);
+	public int getWeight();
 
-	public int getGenWeight();
+	public int setWeight(int weight);
 
-	public BlockEntry setTerrainBlock(BlockEntry entry);
+	public BlockMeta getBlockMeta();
 
-	public BlockEntry getTerrainBlock();
+	public IBlockState getBlockState();
 
-	public BlockEntry setTopBlock(BlockEntry entry);
+	public void setBlockMeta(BlockMeta blockMeta);
 
-	public BlockEntry getTopBlock();
+	public BlockMeta getTopBlockMeta();
 
-	public void loadFromNBT(NBTTagCompound nbt);
+	public IBlockState getTopBlockState();
 
-	public NBTTagCompound saveToNBT();
+	public void setTopBlockMeta(BlockMeta blockMeta);
 }

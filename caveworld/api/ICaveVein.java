@@ -2,46 +2,47 @@ package caveworld.api;
 
 import java.util.Random;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public interface ICaveVein
 {
-	public BlockEntry setBlock(BlockEntry entry);
+	public BlockMeta getBlockMeta();
 
-	public BlockEntry getBlock();
+	public IBlockState getBlockState();
 
-	public int setGenBlockCount(int count);
+	public void setBlockMeta(BlockMeta blockMeta);
 
-	public int getGenBlockCount();
+	public int getBlockCount();
 
-	public int setGenWeight(int weight);
+	public void setBlockCount(int count);
 
-	public int getGenWeight();
+	public int getWeight();
 
-	public int setGenRate(int rate);
+	public void setWeight(int weight);
 
-	public int getGenRate();
+	public int getRate();
 
-	public int setGenMinHeight(int height);
+	public void setRate(int rate);
 
-	public int getGenMinHeight();
+	public int getMinHeight();
 
-	public int setGenMaxHeight(int height);
+	public void setMinHeight(int min);
 
-	public int getGenMaxHeight();
+	public int getMaxHeight();
 
-	public BlockEntry setGenTargetBlock(BlockEntry entry);
+	public void setMaxHeight(int max);
 
-	public BlockEntry getGenTargetBlock();
+	public BlockMeta getTargetBlockMeta();
 
-	public int[] setGenBiomes(int[] biomes);
+	public IBlockState getTargetBlockState();
 
-	public int[] getGenBiomes();
+	public void setTargetBlockMeta(BlockMeta target);
 
-	public void generateVeins(World world, Random random, int chunkX, int chunkZ);
+	public int[] getBiomes();
 
-	public void loadFromNBT(NBTTagCompound nbt);
+	public void setBiomes(int[] biomes);
 
-	public NBTTagCompound saveToNBT();
+	public void generateVeins(World world, Random random, BlockPos pos);
 }
