@@ -70,6 +70,8 @@ caveworld.config.general.miningPoints=Mining Points
 caveworld.config.general.miningPoints.tooltip=Specify the mining points.
 caveworld.config.general.miningPointValidItems=Mining Point Valid Items
 caveworld.config.general.miningPointValidItems.tooltip=Specify the valid items that can getting mining point.
+caveworld.config.general.disableMiningTools=Disable Mining Tools 
+caveworld.config.general.disableMiningTools.tooltip=Disable cavenium based mining tools if you run into issues with the amount of NBT data they store.
 caveworld.config.general.randomiteDrops=Randomite Drops
 caveworld.config.general.randomiteDrops.tooltip=Specify the drop items for Randomite Ore. It can specify up to 500 items.
 caveworld.config.general.randomitePotions=Randomite Potions
@@ -270,6 +272,8 @@ caveworld.bowmode.normal=NORMAL
 caveworld.bowmode.rapid=RAPID
 caveworld.bowmode.snipe=SNIPE
 caveworld.bowmode.torch=TORCH
+
+caveworld.disabled=DISABLED
 
 tile.portalCaveworld.name=Caveworld Portal Block
 tile.rope.name=Rope

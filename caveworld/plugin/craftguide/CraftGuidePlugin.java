@@ -9,6 +9,7 @@
 
 package caveworld.plugin.craftguide;
 
+import caveworld.core.Config;
 import caveworld.item.CaveItems;
 import caveworld.plugin.ICavePlugin;
 import cpw.mods.fml.common.Loader;
@@ -48,9 +49,11 @@ public class CraftGuidePlugin implements ICavePlugin
 	@Override
 	public void invoke()
 	{
-		new CaveniumToolRecipeProvider(new ItemStack(CaveItems.mining_pickaxe));
-		new CaveniumToolRecipeProvider(new ItemStack(CaveItems.lumbering_axe));
-		new CaveniumToolRecipeProvider(new ItemStack(CaveItems.digging_shovel));
-		new FarmingHoeRecipeProvider(new ItemStack(CaveItems.farming_hoe));
+		if (!Config.disableMiningTools) {
+			new CaveniumToolRecipeProvider(new ItemStack(CaveItems.mining_pickaxe));
+			new CaveniumToolRecipeProvider(new ItemStack(CaveItems.lumbering_axe));
+			new CaveniumToolRecipeProvider(new ItemStack(CaveItems.digging_shovel));
+			new FarmingHoeRecipeProvider(new ItemStack(CaveItems.farming_hoe));
+		}
 	}
 }

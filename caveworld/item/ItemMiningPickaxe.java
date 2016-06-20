@@ -678,17 +678,19 @@ public class ItemMiningPickaxe extends ItemCavePickaxe implements ICaveniumTool
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean advanced)
 	{
-		list.add(getModeInfomation(itemstack));
+		if (Config.disableMiningTools) {
+			list.add(StatCollector.translateToLocal("caveworld.disabled"));
+		} else {
+			list.add(getModeInfomation(itemstack));
 
-		Item item = getBase(itemstack);
+			Item item = getBase(itemstack);
 
-		if (item != this)
-		{
-			list.add(I18n.format(getUnlocalizedName() + ".base") + ": " + item.getItemStackDisplayName(itemstack));
+			if (item != this) {
+				list.add(I18n.format(getUnlocalizedName() + ".base") + ": " + item.getItemStackDisplayName(itemstack));
 
-			item.addInformation(itemstack, player, list, advanced);
+				item.addInformation(itemstack, player, list, advanced);
+			}
 		}
-
 		super.addInformation(itemstack, player, list, advanced);
 	}
 

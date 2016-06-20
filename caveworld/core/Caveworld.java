@@ -221,111 +221,93 @@ public class Caveworld
 	{
 		SubItemHelper.cacheSubBlocks(event.getSide());
 		SubItemHelper.cacheSubItems(event.getSide());
+		
+		if (!Config.disableMiningTools) {
 
-		for (Item item : GameData.getItemRegistry().typeSafeIterable())
-		{
-			CaveUtils.isItemPickaxe(item);
-			CaveUtils.isItemAxe(item);
-			CaveUtils.isItemShovel(item);
-			CaveUtils.isItemHoe(item);
-		}
+			for (Item item : GameData.getItemRegistry().typeSafeIterable()) {
+				CaveUtils.isItemPickaxe(item);
+				CaveUtils.isItemAxe(item);
+				CaveUtils.isItemShovel(item);
+				CaveUtils.isItemHoe(item);
+			}
 
-		for (Block block : GameData.getBlockRegistry().typeSafeIterable())
-		{
-			try
-			{
-				List<ItemStack> list = SubItemHelper.getSubBlocks(block);
+			for (Block block : GameData.getBlockRegistry().typeSafeIterable()) {
+				try {
+					List<ItemStack> list = SubItemHelper.getSubBlocks(block);
 
-				if (list.isEmpty())
-				{
-					if (Strings.nullToEmpty(block.getHarvestTool(0)).equalsIgnoreCase("pickaxe") || CaveItems.mining_pickaxe.func_150897_b(block) ||
-						block instanceof BlockOre || block instanceof BlockRedstoneOre || block instanceof BlockGlowstone)
-					{
-						ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 0));
+					if (list.isEmpty()) {
+						if (Strings.nullToEmpty(block.getHarvestTool(0)).equalsIgnoreCase("pickaxe") || CaveItems.mining_pickaxe.func_150897_b(block) ||
+								block instanceof BlockOre || block instanceof BlockRedstoneOre || block instanceof BlockGlowstone) {
+							ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 0));
 
-						if (block instanceof BlockRotatedPillar)
-						{
-							ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 4));
-							ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 8));
-						}
-					}
-
-					if (CaveUtils.isWood(block, 0))
-					{
-						ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 0));
-
-						if (block instanceof BlockRotatedPillar)
-						{
-							ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 4));
-							ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 8));
-						}
-					}
-
-					if (Strings.nullToEmpty(block.getHarvestTool(0)).equalsIgnoreCase("shovel") || CaveItems.digging_shovel.func_150897_b(block) ||
-						block.getMaterial() == Material.ground || block.getMaterial() == Material.grass || block.getMaterial() == Material.sand || block.getMaterial() == Material.snow || block.getMaterial() == Material.craftedSnow)
-					{
-						ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(block, 0));
-
-						if (block instanceof BlockRotatedPillar)
-						{
-							ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(block, 4));
-							ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(block, 8));
-						}
-					}
-				}
-				else for (ItemStack itemstack : list)
-				{
-					if (itemstack != null && itemstack.getItem() != null)
-					{
-						Block sub = Block.getBlockFromItem(itemstack.getItem());
-
-						if (sub == Blocks.air)
-						{
-							continue;
-						}
-
-						int meta = itemstack.getItemDamage();
-
-						if (Strings.nullToEmpty(sub.getHarvestTool(meta)).equalsIgnoreCase("pickaxe") ||
-							CaveItems.mining_pickaxe.func_150897_b(sub) || sub instanceof BlockOre || sub instanceof BlockRedstoneOre || block instanceof BlockGlowstone)
-						{
-							ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta));
-
-							if (sub instanceof BlockRotatedPillar)
-							{
-								ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 4));
-								ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 8));
+							if (block instanceof BlockRotatedPillar) {
+								ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 4));
+								ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 8));
 							}
 						}
 
-						if (CaveUtils.isWood(sub, meta))
-						{
-							ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta));
+						if (CaveUtils.isWood(block, 0)) {
+							ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 0));
 
-							if (sub instanceof BlockRotatedPillar)
-							{
-								ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 4));
-								ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 8));
+							if (block instanceof BlockRotatedPillar) {
+								ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 4));
+								ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(block, 8));
 							}
 						}
 
-						if (Strings.nullToEmpty(sub.getHarvestTool(meta)).equalsIgnoreCase("shovel") || CaveItems.digging_shovel.func_150897_b(sub) ||
-							sub.getMaterial() == Material.ground || sub.getMaterial() == Material.grass || sub.getMaterial() == Material.sand || sub.getMaterial() == Material.snow || sub.getMaterial() == Material.craftedSnow)
-						{
-							ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta));
+						if (Strings.nullToEmpty(block.getHarvestTool(0)).equalsIgnoreCase("shovel") || CaveItems.digging_shovel.func_150897_b(block) ||
+								block.getMaterial() == Material.ground || block.getMaterial() == Material.grass || block.getMaterial() == Material.sand || block.getMaterial() == Material.snow || block.getMaterial() == Material.craftedSnow) {
+							ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(block, 0));
 
-							if (sub instanceof BlockRotatedPillar)
-							{
-								ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 4));
-								ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 8));
+							if (block instanceof BlockRotatedPillar) {
+								ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(block, 4));
+								ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(block, 8));
+							}
+						}
+					} else for (ItemStack itemstack : list) {
+						if (itemstack != null && itemstack.getItem() != null) {
+							Block sub = Block.getBlockFromItem(itemstack.getItem());
+
+							if (sub == Blocks.air) {
+								continue;
+							}
+
+							int meta = itemstack.getItemDamage();
+
+							if (Strings.nullToEmpty(sub.getHarvestTool(meta)).equalsIgnoreCase("pickaxe") ||
+									CaveItems.mining_pickaxe.func_150897_b(sub) || sub instanceof BlockOre || sub instanceof BlockRedstoneOre || block instanceof BlockGlowstone) {
+								ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta));
+
+								if (sub instanceof BlockRotatedPillar) {
+									ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 4));
+									ItemMiningPickaxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 8));
+								}
+							}
+
+							if (CaveUtils.isWood(sub, meta)) {
+								ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta));
+
+								if (sub instanceof BlockRotatedPillar) {
+									ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 4));
+									ItemLumberingAxe.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 8));
+								}
+							}
+
+							if (Strings.nullToEmpty(sub.getHarvestTool(meta)).equalsIgnoreCase("shovel") || CaveItems.digging_shovel.func_150897_b(sub) ||
+									sub.getMaterial() == Material.ground || sub.getMaterial() == Material.grass || sub.getMaterial() == Material.sand || sub.getMaterial() == Material.snow || sub.getMaterial() == Material.craftedSnow) {
+								ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta));
+
+								if (sub instanceof BlockRotatedPillar) {
+									ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 4));
+									ItemDiggingShovel.breakableBlocks.addIfAbsent(new BlockEntry(sub, meta + 8));
+								}
 							}
 						}
 					}
+				} catch (Throwable e) {
 				}
 			}
-			catch (Throwable e) {}
 		}
-
 		CaverAPI.setMiningPointAmount("oreCoal", 1);
 		CaverAPI.setMiningPointAmount("oreIron", 1);
 		CaverAPI.setMiningPointAmount("oreGold", 1);

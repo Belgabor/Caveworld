@@ -9,6 +9,7 @@
 
 package caveworld.item;
 
+import caveworld.core.Config;
 import com.google.common.base.Predicate;
 
 import caveworld.block.CaveBlocks;
@@ -120,14 +121,16 @@ public class CaveItems
 		OreDictionary.registerOre("gemCavenium", new ItemStack(cavenium, 1, 0));
 		OreDictionary.registerOre("refinedCavenium", new ItemStack(cavenium, 1, 1));
 		OreDictionary.registerOre("gemRefinedCavenium", new ItemStack(cavenium, 1, 1));
-		OreDictionary.registerOre("pickaxeMining", mining_pickaxe);
-		OreDictionary.registerOre("miningPickaxe", mining_pickaxe);
-		OreDictionary.registerOre("axeLumbering", lumbering_axe);
-		OreDictionary.registerOre("lumberingAxe", lumbering_axe);
-		OreDictionary.registerOre("shovelDigging", digging_shovel);
-		OreDictionary.registerOre("diggingShovel", digging_shovel);
-		OreDictionary.registerOre("hoeFarming", farming_hoe);
-		OreDictionary.registerOre("farmingHoe", farming_hoe);
+		if (!Config.disableMiningTools) {
+			OreDictionary.registerOre("pickaxeMining", mining_pickaxe);
+			OreDictionary.registerOre("miningPickaxe", mining_pickaxe);
+			OreDictionary.registerOre("axeLumbering", lumbering_axe);
+			OreDictionary.registerOre("lumberingAxe", lumbering_axe);
+			OreDictionary.registerOre("shovelDigging", digging_shovel);
+			OreDictionary.registerOre("diggingShovel", digging_shovel);
+			OreDictionary.registerOre("hoeFarming", farming_hoe);
+			OreDictionary.registerOre("farmingHoe", farming_hoe);
+		}
 		OreDictionary.registerOre("bowCavenic", cavenic_bow);
 		OreDictionary.registerOre("cavenicBow", cavenic_bow);
 		OreDictionary.registerOre("oreCompass", ore_compass);
@@ -184,38 +187,40 @@ public class CaveItems
 		GameRegistry.addShapelessRecipe(new ItemStack(cavenium, 9, 0), new ItemStack(CaveBlocks.cavenium_ore, 1, 2));
 		GameRegistry.addShapelessRecipe(new ItemStack(cavenium, 9, 1), new ItemStack(CaveBlocks.cavenium_ore, 1, 3));
 
-		GameRegistry.addRecipe(new RecipeCaveniumTool(new ItemStack(mining_pickaxe), new Predicate<ItemStack>()
-		{
-			@Override
-			public boolean apply(ItemStack itemstack)
+		if (!Config.disableMiningTools) {
+			GameRegistry.addRecipe(new RecipeCaveniumTool(new ItemStack(mining_pickaxe), new Predicate<ItemStack>()
 			{
-				return CaveUtils.isItemPickaxe(itemstack);
-			}
-		}));
-		GameRegistry.addRecipe(new RecipeCaveniumTool(new ItemStack(lumbering_axe), new Predicate<ItemStack>()
-		{
-			@Override
-			public boolean apply(ItemStack itemstack)
+				@Override
+				public boolean apply(ItemStack itemstack)
+				{
+					return CaveUtils.isItemPickaxe(itemstack);
+				}
+			}));
+			GameRegistry.addRecipe(new RecipeCaveniumTool(new ItemStack(lumbering_axe), new Predicate<ItemStack>()
 			{
-				return CaveUtils.isItemAxe(itemstack);
-			}
-		}));
-		GameRegistry.addRecipe(new RecipeCaveniumTool(new ItemStack(digging_shovel), new Predicate<ItemStack>()
-		{
-			@Override
-			public boolean apply(ItemStack itemstack)
+				@Override
+				public boolean apply(ItemStack itemstack)
+				{
+					return CaveUtils.isItemAxe(itemstack);
+				}
+			}));
+			GameRegistry.addRecipe(new RecipeCaveniumTool(new ItemStack(digging_shovel), new Predicate<ItemStack>()
 			{
-				return CaveUtils.isItemShovel(itemstack);
-			}
-		}));
-		GameRegistry.addRecipe(new RecipeFarmingHoe(new ItemStack(farming_hoe), new Predicate<ItemStack>()
-		{
-			@Override
-			public boolean apply(ItemStack itemstack)
+				@Override
+				public boolean apply(ItemStack itemstack)
+				{
+					return CaveUtils.isItemShovel(itemstack);
+				}
+			}));
+			GameRegistry.addRecipe(new RecipeFarmingHoe(new ItemStack(farming_hoe), new Predicate<ItemStack>()
 			{
-				return CaveUtils.isItemHoe(itemstack);
-			}
-		}));
+				@Override
+				public boolean apply(ItemStack itemstack)
+				{
+					return CaveUtils.isItemHoe(itemstack);
+				}
+			}));
+		}
 
 		GameRegistry.addRecipe(new RecipeCavenicBow(new ItemStack(cavenic_bow)));
 

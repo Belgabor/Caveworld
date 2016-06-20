@@ -133,10 +133,12 @@ public class MCEconomyPlugin implements ICavePlugin
 		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveBlocks.cavenia_portal), -1);
 		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.cavenium, 1, 0), 200);
 		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.cavenium, 1, 1), 500);
-		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.mining_pickaxe), -1);
-		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.lumbering_axe), -1);
-		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.digging_shovel), -1);
-		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.farming_hoe), -1);
+		if (!Config.disableMiningTools) {
+			MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.mining_pickaxe), -1);
+			MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.lumbering_axe), -1);
+			MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.digging_shovel), -1);
+			MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.farming_hoe), -1);
+		}
 		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.cavenic_bow), -1);
 		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.ore_compass), 2200);
 		MCEconomyAPI.addPurchaseItem(new ItemStack(CaveItems.gem, 1, 0), 35);

@@ -108,6 +108,7 @@ public class Config
 	public static boolean showMinerRank;
 	public static String[] miningPoints;
 	public static String[] miningPointValidItems;
+	public static boolean disableMiningTools;
 	public static String[] randomiteDrops;
 	public static int[] randomitePotions;
 	public static boolean oreRenderOverlay;
@@ -352,6 +353,13 @@ public class Config
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
 		propOrder.add(prop.getName());
 		miningPointValidItems = prop.getStringList();
+		prop = generalCfg.get(category, "disableMiningTools", false);
+		prop.setLanguageKey(Caveworld.CONFIG_LANG + category + '.' + prop.getName());
+		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		prop.comment += " [default: " + prop.getDefault() + "]";
+		prop.comment += Configuration.NEW_LINE;
+		propOrder.add(prop.getName());
+		disableMiningTools = prop.getBoolean(disableMiningTools);
 		prop = generalCfg.get(category, "randomiteDrops", new String[0]);
 		prop.setMaxListLength(500).setLanguageKey(Caveworld.CONFIG_LANG + category + '.' + prop.getName()).setConfigEntryClass(selectItemsWithBlocks);
 		prop.comment = StatCollector.translateToLocal(prop.getLanguageKey() + ".tooltip");
